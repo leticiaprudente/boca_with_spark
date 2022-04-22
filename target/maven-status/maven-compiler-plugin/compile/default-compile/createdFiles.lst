@@ -1,2 +1,8 @@
-HelloWorld.class
 Main.class
+spark\routes\Problems.class
+SQLite\SQLInsert.class
+SQLite\SQLiteTables.class
+HelloWorld.class
+spark\routes\Answers.class
+Classes\Answer.class
+Classes\Problem.class
