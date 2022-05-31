@@ -1,8 +1,12 @@
 Main.class
+Classes\ConnectSQLite.class
+Classes\Error.class
+Services\AnswerService.class
 spark\routes\Problems.class
 SQLite\SQLInsert.class
 SQLite\SQLiteTables.class
-HelloWorld.class
 spark\routes\Answers.class
 Classes\Answer.class
+spark\routes\HelloWorld.class
 Classes\Problem.class
+Services\ProblemService.class

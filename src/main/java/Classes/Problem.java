@@ -1,5 +1,8 @@
 package Classes;
 
+import java.util.List;
+import java.io.*;
+
 public class Problem {
 
     public String filename, problem, lps;
@@ -33,4 +36,6 @@ public class Problem {
     public void setLps(String lps) {
         this.lps = lps;
     }
+
+    //public List<Problem> getAllProblems() ;
 }

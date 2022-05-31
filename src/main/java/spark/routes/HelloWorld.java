@@ -1,3 +1,5 @@
+package spark.routes;
+
 import static spark.Spark.*;
 
 public class HelloWorld {

@@ -2,8 +2,11 @@ E:\Fatec\LP2\java-spark-boca\src\main\java\SQLite\SQLInsert.java
 E:\Fatec\LP2\java-spark-boca\src\main\java\SQLite\SQLiteTables.java
 E:\Fatec\LP2\java-spark-boca\src\main\java\spark\routes\HelloWorld.java
 E:\Fatec\LP2\java-spark-boca\src\main\java\Classes\Problem.java
+E:\Fatec\LP2\java-spark-boca\src\main\java\Services\AnswerService.java
+E:\Fatec\LP2\java-spark-boca\src\main\java\Classes\ConnectSQLite.java
 E:\Fatec\LP2\java-spark-boca\src\main\java\Classes\Answer.java
+E:\Fatec\LP2\java-spark-boca\src\main\java\Services\ProblemService.java
 E:\Fatec\LP2\java-spark-boca\src\main\java\spark\routes\Answers.java
-E:\Fatec\LP2\java-spark-boca\src\main\java\SQLite\SQLiteConnect.java
 E:\Fatec\LP2\java-spark-boca\src\main\java\spark\routes\Problems.java
+E:\Fatec\LP2\java-spark-boca\src\main\java\Classes\Error.java
 E:\Fatec\LP2\java-spark-boca\src\main\java\Main.java
