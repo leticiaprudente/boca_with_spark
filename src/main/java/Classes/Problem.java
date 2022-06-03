@@ -13,6 +13,9 @@ public class Problem {
         this.lps = lps;
     }
 
+    public Problem() {
+    }
+
     public String getFilename() {
         return filename;
     }

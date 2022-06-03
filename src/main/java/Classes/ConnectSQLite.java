@@ -12,20 +12,18 @@ public class ConnectSQLite {
             // create a connection to the database
             connection = DriverManager.getConnection(url);
 
+           // DatabaseMetaData meta = connection.getMetaData();
+
             System.out.println("Connection to SQLite has been established.");
 
             Statement statement = connection.createStatement();
 
-            //create table 'problem'
-            statement.execute("CREATE TABLE IF NOT EXISTS problem( problem TEXT NOT NULL PRIMARY KEY, filename TEXT NOT NULL, lps TEXT NOT NULL, CHECK( lps IN ('java', 'c', 'c++','python')) )");
-            System.out.println("Table 'problem' created.");
-
-            //create table 'answer'
-            statement.execute("CREATE TABLE IF NOT EXISTS answer(problem TEXT NOT NULL PRIMARY KEY, filename TEXT, content TEXT NOT NULL, FOREIGN KEY (problem) REFERENCES problem (problem) ON UPDATE CASCADE ON DELETE CASCADE)");
-            System.out.println("Table 'answer' created.");
+            //return url;
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+
+            //return null;
         } /*finally {
             try {
                 if (connection != null) {
@@ -35,14 +33,5 @@ public class ConnectSQLite {
                 System.out.println(ex.getMessage());
             }
         } */
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        connect();
-
-
     }
 }
