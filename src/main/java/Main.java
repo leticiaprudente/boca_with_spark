@@ -11,6 +11,10 @@ public class Main {
     public static void main(String[] args) throws SQLException {
         ConnectSQLite con = new ConnectSQLite();
         con.connect() ;
+        //SQL command for drop table
+        String truncateTableProblem = "DROP TABLE IF EXISTS problem" ;
+
+        String truncateTableAnswer = "DROP TABLE IF EXISTS answer" ;
 
         // SQL command for creating a new table
         String createTableProblem = "CREATE TABLE IF NOT EXISTS problem ( " +
@@ -28,6 +32,9 @@ public class Main {
                 "ON DELETE CASCADE);" ;
 
         StatementSQLite tab = new StatementSQLite();
+        tab.executeSQL(truncateTableAnswer);
+        tab.executeSQL(truncateTableProblem);
+
         tab.executeSQL(createTableProblem);
         tab.executeSQL(createTableAnswer);
 
