@@ -3,9 +3,6 @@ package Services;
 import Classes.Problem;
 import Classes.StatementSQLite;
 
-import java.rmi.server.ExportException;
-import java.util.Locale;
-
 import static spark.Spark.get;
 
 public class ProblemService {
@@ -16,9 +13,9 @@ public class ProblemService {
             String insertIntoTableProblem = "INSERT INTO problem (problem, filename, lps) " +
                     "VALUES ('" + problem.problem.toUpperCase() + "' , '" + problem.filename + "' , '" + problem.lps + "' );";
             StatementSQLite tab = new StatementSQLite();
-            tab.executeSQL(insertIntoTableProblem);
+            tab.statementeSQLite(insertIntoTableProblem);
 
-            System.out.println("Row inserted - Problem: " +problem.problem+ "\nFilename: " +problem.filename+ "\nLPS: " + problem.lps);
+            System.out.println("Row inserted - Problem: " +problem.problem+ " - Filename: " +problem.filename+ " - LPS: " + problem.lps);
         } catch (Exception e) {
             e.getStackTrace();
         }

@@ -1,7 +1,7 @@
 import Classes.ConnectSQLite;
 
 import Classes.StatementSQLite;
-import Controllers.Problems;
+import Controllers.*;
 
 import java.sql.SQLException;
 
@@ -32,11 +32,11 @@ public class Main {
                 "ON DELETE CASCADE);" ;
 
         StatementSQLite tab = new StatementSQLite();
-        tab.executeSQL(truncateTableAnswer);
-        tab.executeSQL(truncateTableProblem);
+        tab.statementeSQLite(truncateTableAnswer);
+        tab.statementeSQLite(truncateTableProblem);
 
-        tab.executeSQL(createTableProblem);
-        tab.executeSQL(createTableAnswer);
+        tab.statementeSQLite(createTableProblem);
+        tab.statementeSQLite(createTableAnswer);
 
         get("/hello","application/json", (req, res) -> "{\"message\": \"\"Hello World (get Spark)\"} ");
 
