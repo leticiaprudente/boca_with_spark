@@ -1,6 +1,5 @@
 package Classes;
 
-import javax.xml.transform.Result;
 import java.sql.*;
 
 public class StatementSQLite {
