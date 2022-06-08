@@ -2,22 +2,17 @@ package Controllers;
 
 import static spark.Spark.*;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import Classes.JsonTransformer;
 import Classes.ObjectTransformer;
 import Classes.Problem;
-import Classes.StatementSQLite;
 import Services.ProblemService;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import javax.xml.transform.Result;
 
 public class Problems {
     private static Map<String, Problem> problems = new HashMap<String, Problem>();
@@ -27,42 +22,40 @@ public class Problems {
         notFound((req, res) -> {
             res.type("application/json");
             return "{\"error_code\":\"404\"," +
-                    "\"error_message\":\"Sorry, URL Not Found\"}";
+                    "\"error_msg\":\"Sorry, URL Not Found\"}";
         });
 
         internalServerError((req, res) -> {
             res.type("application/json");
             return "{\"error_code\":\"500\"," +
-                    "\"error_message\":\"Ops! Internal Server Error\"}";
+                    "\"error_msg\":\"Ops! Internal Server Error\"}";
         });
-/*
-        get("/throwexception", (request, response) -> {
-            throw new SQLException();
-        });
-
-        exception(spark.HaltException.class, (ex, req, res) -> {
-            res.status(204);
-            res.type("application/json");
-            halt("{\"return_code\":\"204\"," +
-                    "\"error_message\":\"The server successfully processed the request but the Problem are not found.\"}");
-        });
-*/
 
         /*problem*/
         path("/problem", () -> {
             //filter: all fields are mandatory
             before("/addProblem", (req, res) ->
             {
-                String bodyContent = req.body();
                 JsonTransformer jsonTransformer = new JsonTransformer();
-                Problem problem = jsonTransformer.stringToObject(bodyContent);
+                Problem problem = jsonTransformer.stringToObject(req.body());
+                Integer status = null;
+                try{
+                    ProblemService problemservice = new ProblemService();
+                    status = problemservice.beforeAddProblem(problem);
+                }catch (SQLException e){
+                    e.getStackTrace();
+                }
 
-                if  ( !(problem.filename.trim().length() != 0) || !(problem.problem.trim().length() != 0) || !(problem.lps.trim().length() != 0 ) ) {
+                if  (status == null) {
                     res.type("application/json");
                     halt(400, "{\"error_code\":\"400\"," +
-                            "\"error_message\":\"What do you say to empty fields? Not today! All fields are required!!!\"}");
-
+                            "\"error_msg\":\"What do you say to empty fields? Not today! All fields are required!!!\"}");
+                }else if(status == 0){
+                    res.type("application/json");
+                    halt(205,"{\"return_code\":\"205\"," +
+                            "\"error_msg\":\"The server successfully processed the request but the Problem already exists.\"}");
                 }
+
             });
 
             post("/addProblem", "application/json", (req, res) -> {
@@ -74,95 +67,99 @@ public class Problems {
                 Problem problem = jsonTransformer.stringToObject(bodyContent);
 
                 ProblemService problemservice = new ProblemService();
-
-                Problem problemCreated;
-                try {
-                    problemCreated = problemservice.createProblem(problem);
-
-                } catch (Exception e){
-                    res.type("application/json");
-                    res.status(500);
-                    return "{\"error_msg\":\"500 - errow\"}";
-                    //ajustar para tratar throws expections expecificas
-                };
-
                 ObjectTransformer objectTransformer = new ObjectTransformer();
-                res.status(201);
-                res.type("application/json");
+                Problem problemCreated = new Problem();
+
+                try {
+                    problemCreated = problemservice.addProblem(problem);
+                    res.status(201);
+                    res.type("application/json");
+
+                } catch (SQLException e){
+                    e.getStackTrace();
+
+                };
                 return objectTransformer.objectToString(problemCreated);
 
             });
 
             get("/searchAllProblems", (req, res) -> {
-
-                String selectProblem = "SELECT filename, problem, lps FROM problem ORDER BY problem; " ;
-                StatementSQLite statement = new StatementSQLite();
-
-                ResultSet resultSet = statement.selectTable(selectProblem);
-
                 JsonObject jsonObject = new JsonObject();
-                JsonArray jsonArray = new JsonArray();
 
-                while(resultSet.next()) {
-                    JsonObject record = new JsonObject();
-                    //Inserting key-value pairs into the json object
-                    record.addProperty("filename", resultSet.getString("filename"));
-                    record.addProperty("problem", resultSet.getString("problem"));
-                    record.addProperty("lps", resultSet.getString("lps"));
-                    jsonArray.add(record);
+                try{
+                    ProblemService problemservice = new ProblemService();
+                    jsonObject = problemservice.searchAllProblems();
+
+                    if(jsonObject==null){
+                        res.status(205);
+                        res.type("application/json");
+                        halt(205,"{\"error_code\":\"205\"," +
+                                "\"error_msg\":\"The server successfully processed the request but the table Problem is empty.\"}");
+                    }
+                }catch(SQLException e){
+                    e.getStackTrace();
                 }
-                jsonObject.add("Problems", jsonArray);
+
                 res.type("application/json");
                 return jsonObject ;
+
             });
 
 
-            get("/searchProblem/:problem", (req, res) -> {
-                String selectProblemById = "SELECT filename, problem, lps FROM problem WHERE problem = '" +req.params(":problem")+ "';" ;
-                StatementSQLite statement = new StatementSQLite();
-                ResultSet resultSet = statement.selectTable(selectProblemById);
-                JsonObject jsonObject = new JsonObject();
-                if(resultSet.next()){
-                    jsonObject.addProperty("filename", resultSet.getString("filename"));
-                    jsonObject.addProperty("problem", resultSet.getString("problem"));
-                    jsonObject.addProperty("lps", resultSet.getString("lps"));
-                } else {
-                    res.status(204);
-                    res.type("application/json");
-                    halt("{\"return_code\":\"204\"," +
-                            "\"error_message\":\"The server successfully processed the request but the Problem does not exists in the database.\"}");
+            get("/searchProblemByID/:problem", (req, res) -> {
+                JsonObject jsonObject = null;
+
+                try{
+                    ProblemService problemservice = new ProblemService();
+                    jsonObject = problemservice.searchProblemByID(req.params(":problem"));
+
+                    if(jsonObject==null){
+                        res.type("application/json");
+                        halt(205,"{\"error_code\":\"205\"," +
+                                "\"error_msg\":\"The server successfully processed the request but the Problem doesn't exists in the database.\"}");
+                    }
+
+                }catch(SQLException e){
+                    e.getStackTrace();
                 }
-                res.status(200);
+
                 res.type("application/json");
                 return jsonObject;
             });
 
-            before("/deleteProblem/:problem", (req, res) ->
-            {
-                String selectCountProblemById = "SELECT * FROM problem WHERE problem = '" +req.params(":problem").toUpperCase()+ "';" ;
-                System.out.println("before, problem: " +req.params(":problem").toUpperCase());
-                StatementSQLite statement = new StatementSQLite();
-                statement.statementeSQLite(selectCountProblemById);
-
-                ResultSet resultSet = statement.selectTable(selectCountProblemById);
-                JsonObject jsonObject = new JsonObject();
-
-                if  ( !(resultSet.next())) {
-                    res.status(204);
-                    res.type("application/json");
-                    halt("{\"return_code\":\"204\"," +
-                            "\"error_message\":\"The server successfully processed the request but the Problem does not exists in the database.\"}");
+            before("/deleteProblemByID/:problem", (req, res) -> {
+                JsonObject jsonObject = null;
+                try{
+                    ProblemService problemService = new ProblemService();
+                    jsonObject = problemService.beforeDeleteProblemByID(req.params(":problem"));
+                    if(jsonObject==null){
+                        res.type("application/json");
+                        halt(205,"{\"error_code\":\"205\"," +
+                                "\"error_msg\":\"The server successfully processed the request but the Problem doesn't exists in the database.\"}");
+                    }
+                }catch (SQLException e){
+                    e.getStackTrace();
                 }
             });
 
-            delete("/deleteProblem/:problem", (req, res) -> {
-                String problem = req.params(":problem");
-                String deleteProblemById = "DELETE FROM problem WHERE problem = '" +req.params(":problem")+ "';" ;
-                StatementSQLite deleteProblem = new StatementSQLite();
-                deleteProblem.statementeSQLite(deleteProblemById) ;
+            delete("/deleteProblemByID/:problem", (req, res) -> {
+                JsonObject jsonObject = new JsonObject();
+                try{
+                    ProblemService problemService = new ProblemService();
+                    String problemVerify = problemService.deleteProblemByID(req.params(":problem"));
+
+                    if( problemVerify != req.params(":problem") ){
+                        res.status(406);
+                        res.type("application/json");
+                        return("{\"error_msg\":\"Oh no :(\"}");
+                    }
+
+                }catch (SQLException e){
+                    e.getStackTrace();
+                }
                 res.status(200);
                 res.type("application/json");
-                return("{\"msg\":\"Problem removed\"}");
+                return("{\"msg\":\"Problem removed.\"}");
             });
 
         });
