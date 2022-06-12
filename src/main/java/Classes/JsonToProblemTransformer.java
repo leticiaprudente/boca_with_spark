@@ -1,7 +1,7 @@
 package Classes;
 import com.google.gson.Gson;
 
-public class JsonTransformer {
+public class JsonToProblemTransformer {
 
     public static Problem stringToObject(String bodyContent) throws Exception {
         Gson gson = new Gson();

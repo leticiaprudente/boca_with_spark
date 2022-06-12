@@ -1,13 +1,16 @@
 package Classes;
 
-public class Answer {
+public class ExpectedAnswer {
 
     public String filename, problem, content;
 
-    public Answer(String filename, String problem, String content) {
+    public ExpectedAnswer(String filename, String problem, String content) {
         this.filename = filename;
         this.problem = problem;
         this.content = content;
+    }
+
+    public ExpectedAnswer() {
     }
 
     public String getFilename() {

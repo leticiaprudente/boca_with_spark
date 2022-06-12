@@ -2,12 +2,13 @@ package Controllers;
 
 import static spark.Spark.*;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import Classes.JsonTransformer;
-import Classes.ObjectTransformer;
+import Classes.JsonToProblemTransformer;
+import Classes.ProblemToJsonTransformer;
 import Classes.Problem;
 import Services.ProblemService;
 
@@ -17,7 +18,7 @@ import com.google.gson.JsonObject;
 public class Problems {
     private static Map<String, Problem> problems = new HashMap<String, Problem>();
 
-    public static void createRoutes(){
+    public static void createProblemRoutes(){
         /*errors*/
         notFound((req, res) -> {
             res.type("application/json");
@@ -34,10 +35,9 @@ public class Problems {
         /*problem*/
         path("/problem", () -> {
             //filter: all fields are mandatory
-            before("/addProblem", (req, res) ->
-            {
-                JsonTransformer jsonTransformer = new JsonTransformer();
-                Problem problem = jsonTransformer.stringToObject(req.body());
+            before("/addProblem", (req, res) -> {
+                JsonToProblemTransformer jsonToProblemTransformer = new JsonToProblemTransformer();
+                Problem problem = jsonToProblemTransformer.stringToObject(req.body());
                 Integer status = null;
                 try{
                     ProblemService problemservice = new ProblemService();
@@ -52,7 +52,7 @@ public class Problems {
                             "\"error_msg\":\"What do you say to empty fields? Not today! All fields are required!!!\"}");
                 }else if(status == 0){
                     res.type("application/json");
-                    halt(205,"{\"return_code\":\"205\"," +
+                    halt(205,"{\"error_code\":\"205\"," +
                             "\"error_msg\":\"The server successfully processed the request but the Problem already exists.\"}");
                 }
 
@@ -63,11 +63,11 @@ public class Problems {
                 //RETORNO DA REQUISIÇÃO
 
                 String bodyContent = req.body();
-                JsonTransformer jsonTransformer = new JsonTransformer();
-                Problem problem = jsonTransformer.stringToObject(bodyContent);
+                JsonToProblemTransformer jsonToProblemTransformer = new JsonToProblemTransformer();
+                Problem problem = jsonToProblemTransformer.stringToObject(bodyContent);
 
                 ProblemService problemservice = new ProblemService();
-                ObjectTransformer objectTransformer = new ObjectTransformer();
+                ProblemToJsonTransformer problemToJsonTransformer = new ProblemToJsonTransformer();
                 Problem problemCreated = new Problem();
 
                 try {
@@ -79,25 +79,24 @@ public class Problems {
                     e.getStackTrace();
 
                 };
-                return objectTransformer.objectToString(problemCreated);
+                return problemToJsonTransformer.objectToString(problemCreated);
 
             });
 
             get("/searchAllProblems", (req, res) -> {
-                JsonObject jsonObject = new JsonObject();
+                JsonObject jsonObject = null;
 
                 try{
                     ProblemService problemservice = new ProblemService();
                     jsonObject = problemservice.searchAllProblems();
-
-                    if(jsonObject==null){
-                        res.status(205);
-                        res.type("application/json");
-                        halt(205,"{\"error_code\":\"205\"," +
-                                "\"error_msg\":\"The server successfully processed the request but the table Problem is empty.\"}");
-                    }
                 }catch(SQLException e){
                     e.getStackTrace();
+                }
+                if(jsonObject==null){
+                    res.status(205);
+                    res.type("application/json");
+                    halt(205,"{\"error_code\":\"205\"," +
+                            "\"error_msg\":\"The server successfully processed the request but the table Problem is empty.\"}");
                 }
 
                 res.type("application/json");
@@ -128,11 +127,11 @@ public class Problems {
             });
 
             before("/deleteProblemByID/:problem", (req, res) -> {
-                JsonObject jsonObject = null;
+                Boolean verify = false;
                 try{
                     ProblemService problemService = new ProblemService();
-                    jsonObject = problemService.beforeDeleteProblemByID(req.params(":problem"));
-                    if(jsonObject==null){
+                    verify = problemService.beforeDeleteProblemByID(req.params(":problem"));
+                    if(!verify){
                         res.type("application/json");
                         halt(205,"{\"error_code\":\"205\"," +
                                 "\"error_msg\":\"The server successfully processed the request but the Problem doesn't exists in the database.\"}");
@@ -143,23 +142,27 @@ public class Problems {
             });
 
             delete("/deleteProblemByID/:problem", (req, res) -> {
-                JsonObject jsonObject = new JsonObject();
                 try{
                     ProblemService problemService = new ProblemService();
-                    String problemVerify = problemService.deleteProblemByID(req.params(":problem"));
+                    Boolean problemVerify = problemService.deleteProblemByID(req.params(":problem"));
 
-                    if( problemVerify != req.params(":problem") ){
+                    if( !problemVerify ){
                         res.status(406);
                         res.type("application/json");
                         return("{\"error_msg\":\"Oh no :(\"}");
                     }
-
                 }catch (SQLException e){
-                    e.getStackTrace();
+                    e.printStackTrace();
                 }
+                File dir = new File("Files\\ExpectedAnswer\\"+req.params(":problem").trim().toUpperCase());
+                if (dir.exists()){
+                    System.out.println("The directory exists");
+                    dir.delete();
+                }
+
                 res.status(200);
                 res.type("application/json");
-                return("{\"msg\":\"Problem removed.\"}");
+                return("{\"msg\":\"Problem and expected answers have been removed.\"}");
             });
 
         });
