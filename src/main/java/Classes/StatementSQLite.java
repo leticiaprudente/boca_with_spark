@@ -65,10 +65,8 @@ public class StatementSQLite {
                 return false;
             }
             conn.setAutoCommit(false);
-
             //The constant indicating that generated keys should be made available for retrieval.
             preparedStatement = conn.prepareStatement(sqlCommand,Statement.RETURN_GENERATED_KEYS);
-
             /*You must supply values in place of the question mark placeholders (if there are any) before you can execute a PreparedStatement object.
             * The first argument for each of these setter methods specifies the question mark placeholder. */
             if(problem.problem != null){
@@ -80,11 +78,8 @@ public class StatementSQLite {
             if(problem.lps != null){
                 preparedStatement.setString(3, problem.lps);
             }
-
             //for INSERT, UPDATE or DELETE use the executeUpdate() method
             int rowAffected = preparedStatement.executeUpdate();
-            System.out.println("rowAffected: " +rowAffected );
-
             resultSet = preparedStatement.getGeneratedKeys();
 
             if (rowAffected != 1) {
