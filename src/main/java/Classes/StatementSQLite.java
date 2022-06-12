@@ -20,23 +20,35 @@ public class StatementSQLite {
     }
 
     public Boolean createTable(String sqlCommand){
-        System.out.println("createTable - sql commando que chegou: " +sqlCommand);
-        Connection conn;
-        Statement statement;
+        Connection connection = null;
+        Statement statement = null;
         try {
-            conn = this.connect();
-            if (conn == null) {
+            connection = this.connect();
+            if (connection == null) {
                 return false;
             }
-            statement = conn.createStatement();
+            statement = connection.createStatement();
 
             statement.executeUpdate(sqlCommand);
 
             System.out.println("Table created.");
             return true;
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        } catch (SQLException e1) {
+            System.out.println(e1.getMessage());
             return false;
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+
+                    connection.close();
+                }
+            } catch (SQLException e2) {
+                e2.getStackTrace();
+                System.out.println(e2.getMessage());
+            }
         }
     }
 
@@ -128,27 +140,29 @@ public class StatementSQLite {
             resultSet = statement.executeQuery(selectTable);
             
             System.out.println("Select command executed.");
+            //System.out.println("SELECT TABLE teste> " +resultSet.getString("problem") +", " +resultSet.getString("filename") +", " +resultSet.getString("lps"));
             return resultSet;
 
         } catch (SQLException e1) {
-            System.out.println(e1.getMessage());
+            System.out.println("E1: " +e1.getMessage());
             e1.getMessage();
             return null;
 
-        }  finally {
+        } finally {
             try {
-                if(resultSet != null){
+                if (resultSet != null) {
                     resultSet.close();
                 }
                 if (statement != null) {
                     statement.close();
                 }
                 if (con != null) {
+
                     con.close();
                 }
-            } catch (SQLException e2) {
-                System.out.println(e2.getMessage());
-                e2.getStackTrace();
+            } catch (SQLException e3) {
+                e3.getStackTrace();
+                System.out.println(e3.getMessage());
             }
         }
 

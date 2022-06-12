@@ -127,11 +127,11 @@ public class Problems {
             });
 
             before("/deleteProblemByID/:problem", (req, res) -> {
-                JsonObject jsonObject = null;
+                Boolean verify = false;
                 try{
                     ProblemService problemService = new ProblemService();
-                    jsonObject = problemService.beforeDeleteProblemByID(req.params(":problem"));
-                    if(jsonObject==null){
+                    verify = problemService.beforeDeleteProblemByID(req.params(":problem"));
+                    if(!verify){
                         res.type("application/json");
                         halt(205,"{\"error_code\":\"205\"," +
                                 "\"error_msg\":\"The server successfully processed the request but the Problem doesn't exists in the database.\"}");
@@ -142,12 +142,11 @@ public class Problems {
             });
 
             delete("/deleteProblemByID/:problem", (req, res) -> {
-                JsonObject jsonObject = new JsonObject();
                 try{
                     ProblemService problemService = new ProblemService();
-                    String problemVerify = problemService.deleteProblemByID(req.params(":problem"));
+                    Boolean problemVerify = problemService.deleteProblemByID(req.params(":problem"));
 
-                    if( problemVerify != req.params(":problem") ){
+                    if( !problemVerify ){
                         res.status(406);
                         res.type("application/json");
                         return("{\"error_msg\":\"Oh no :(\"}");
