@@ -32,20 +32,17 @@ public class ProblemService {
     }
 
     public static Problem addProblem(Problem problem) throws SQLException{
-        //VERIFICAÇÃO E REGRAS DE NEGÓCIO NO SERVICE
-        //logica
         try {
+            String insertIntoTableProblem = "INSERT INTO problem (problem, filename, lps) VALUES (?, ? ,?)";
 
-            String insertIntoTableProblem = "INSERT INTO problem (problem, filename, lps) " +
-                    "VALUES ('" + problem.problem.toUpperCase() + "' , '" + problem.filename + "' , '" + problem.lps + "' );";
+            StatementSQLite transaction = new StatementSQLite();
+            Boolean verifyPersistence = transaction.prepareStatementTransaction(problem, insertIntoTableProblem);
 
-            StatementSQLite insertIntoTable = new StatementSQLite();
-            Boolean createdOrNot = insertIntoTable.statementeSQLite(insertIntoTableProblem);
-            if (createdOrNot == false) {
+            if ( !verifyPersistence ) {
                 return null;
             }
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.getStackTrace();
         }
         return problem;
@@ -53,19 +50,16 @@ public class ProblemService {
 
     public static JsonObject searchAllProblems() throws SQLException {
 
-        System.out.println("entreii");
-
         String selectAllProblems = "SELECT filename, problem, lps FROM problem ORDER BY problem;"  ;
         StatementSQLite statement = new StatementSQLite();
         JsonObject jsonObject = new JsonObject();
+        ResultSet resultSet;
 
         try {
+            resultSet = statement.selectTable(selectAllProblems);
 
-            ResultSet resultSet = statement.selectTable(selectAllProblems);
-
-            //System.out.println("result is before first? " +resultSet.isBeforeFirst());
-
-            if(! (resultSet.isBeforeFirst()) ){
+            //SQLException "A TYPE_FORWARD_ONLY": ResultSet only supports next() for navigation
+            if(!(resultSet.next()) ){
                 jsonObject = null;
                 System.out.println("Problem table is empty.");
             }
@@ -80,33 +74,33 @@ public class ProblemService {
                     jsonArray.add(record);
                 } ;
                 jsonObject.add("Problems", jsonArray);
-                //}
+
             }
         } catch (SQLException e) {
-            e.getStackTrace();
+            System.out.println(e.getMessage());
+            e.getMessage();
         }
         return  jsonObject ;
 
     }
 
     public static JsonObject searchProblemByID(String problemID) throws SQLException{
-        String selectProblemById = "SELECT filename, problem, lps FROM problem WHERE problem = '" +problemID.toUpperCase()+ "';" ;
+        String selectProblemById = "SELECT filename, problem, lps FROM problem WHERE problem = '" +problemID.trim().toUpperCase()+ "'" ;
 
-        StatementSQLite statement = new StatementSQLite();
-        ResultSet resultSet = statement.selectTable(selectProblemById);
+        StatementSQLite select = new StatementSQLite();
+
+        ResultSet resultSet = select.selectTable(selectProblemById);
+
         JsonObject jsonObject = new JsonObject(); //não pode ser null por causa do add property! precisa estar instanciado
 
-        if(! (resultSet.isBeforeFirst())){
-            System.out.println("o bagulho eh nulo");
+        if(resultSet.wasNull()){
+            System.out.println("searchProblemByID: result set eh nulo");
             jsonObject = null;
-
         } else {
-            //resultSet.getString("problem").trim().toUpperCase().equals(problemID.trim().toUpperCase()) ){
             jsonObject.addProperty("filename", resultSet.getString("filename"));
             jsonObject.addProperty("problem", resultSet.getString("problem"));
             jsonObject.addProperty("lps", resultSet.getString("lps"));
         }
-
         return jsonObject;
     }
 
@@ -133,13 +127,16 @@ public class ProblemService {
     }
 
     public static String deleteProblemByID(String problemID) throws SQLException{
-        String deleteProblemById = "DELETE FROM problem WHERE problem = '" +problemID+ "';" ;
-        StatementSQLite statement = new StatementSQLite();
+        String deleteProblemById = "DELETE FROM problem WHERE problem = ?;" ;
+        Problem problemObj = new Problem();
+        problemObj.problem = problemID.trim().toUpperCase();
 
-        Boolean deletedOrNot = statement.statementeSQLite(deleteProblemById);
-        if (deletedOrNot == false) {
+        StatementSQLite transaction = new StatementSQLite();
+        Boolean verifyPersistence = transaction.prepareStatementTransaction(problemObj, deleteProblemById);
+
+        if ( !verifyPersistence ) {
             return null;
-        }else{
+        }else {
             return problemID;
         }
 
