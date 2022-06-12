@@ -1,0 +1,339 @@
+{
+	"info": {
+		"_postman_id": "e100d3f2-c4bf-4361-b8e9-b06f9ec0d6e8",
+		"name": "SparkjavaBOCA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8982903"
+	},
+	"item": [
+		{
+			"name": "Problem",
+			"item": [
+				{
+					"name": "PostProblemOK",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filename\" : \"pradinho.py\",\r\n    \"problem\" : \"A\",\r\n    \"lps\" : \"java|c|c++|python\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/problem/addProblem",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"problem",
+								"addProblem"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PostProblemEmptyField",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filename\" : \"\",\r\n    \"problem\" : \"B\",\r\n    \"lps\" : \"java\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/problem/addProblem",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"problem",
+								"addProblem"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllProblemsOK",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/problem/searchAllProblems",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"problem",
+								"searchAllProblems"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetProblemByIdOK",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:4567/problem/searchProblemByID/A",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"problem",
+								"searchProblemByID",
+								"A"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetProblemByIdNotExists",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:4567/problem/searchProblemByID/C",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"problem",
+								"searchProblemByID",
+								"C"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteProblemByIDOK",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/problem/deleteProblemByID/A",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"problem",
+								"deleteProblemByID",
+								"A"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteProblemByIDNotExists",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/problem/deleteProblemByID/C",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"problem",
+								"deleteProblemByID",
+								"C"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Answer",
+			"item": [
+				{
+					"name": "PostExpectedAnswerOK",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filename\" : \"respostaA.py\",\r\n    \"problem\" : \"A\",\r\n    \"content\" : \"println('Hellow!')\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/expectedAnswer/addExpectedAnswer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"expectedAnswer",
+								"addExpectedAnswer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PostExpectedAnswerEmptyField",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filename\" : \"respostaA.txt\",\r\n    \"problem\" : \"A\",\r\n    \"content\" : \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/expectedAnswer/addExpectedAnswer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"expectedAnswer",
+								"addExpectedAnswer"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "HelloWorld",
+			"item": [
+				{
+					"name": "GetHello",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/hello",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"hello"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetHelloNotFound",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4567/h",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"h"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
