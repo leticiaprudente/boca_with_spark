@@ -110,6 +110,7 @@ public class ProblemService {
             jsonObject.addProperty("problem", resultSet.getString("problem"));
             jsonObject.addProperty("lps", resultSet.getString("lps"));
         }
+        resultSet.close();
         return jsonObject;
     }
 

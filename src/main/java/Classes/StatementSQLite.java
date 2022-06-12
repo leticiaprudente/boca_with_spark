@@ -13,7 +13,7 @@ public class StatementSQLite {
             connection = DriverManager.getConnection(url);
             System.out.println("Connection to SQLite has been established.");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
             return null;
         }
         return connection;
@@ -34,7 +34,7 @@ public class StatementSQLite {
             System.out.println("Table created.");
             return true;
         } catch (SQLException e1) {
-            System.out.println(e1.getMessage());
+            e1.printStackTrace();
             return false;
         } finally {
             try {
@@ -46,8 +46,7 @@ public class StatementSQLite {
                     connection.close();
                 }
             } catch (SQLException e2) {
-                e2.getStackTrace();
-                System.out.println(e2.getMessage());
+                e2.printStackTrace();
             }
         }
     }
@@ -87,20 +86,23 @@ public class StatementSQLite {
             if (rowAffected != 1) {
                 System.out.println("Rollback, row affected false");
                 conn.rollback();
+                return false;
+            } else {
+                System.out.println("COMMITOU");
+                conn.commit();
             }
-            conn.commit();
+
         } catch (SQLException e1) {
             try {
                 if (conn != null) {
                     System.out.println("SQLException Rollback,conn != null");
                     conn.rollback();
+                    return false;
                 }
             } catch (SQLException e2) {
-                e1.getStackTrace();
-                System.out.println(e2.getMessage());
+                e2.printStackTrace();
             }
-            e1.getStackTrace();
-            System.out.println(e1.getMessage());
+            e1.printStackTrace();
         } finally {
             try {
                 if (resultSet != null) {
@@ -110,12 +112,10 @@ public class StatementSQLite {
                     preparedStatement.close();
                 }
                 if (conn != null) {
-
                     conn.close();
                 }
             } catch (SQLException e3) {
-                e3.getStackTrace();
-                System.out.println(e3.getMessage());
+                e3.printStackTrace();
             }
         }
         return true;
@@ -123,7 +123,7 @@ public class StatementSQLite {
 
 
     public ResultSet selectTable(String selectTable) throws SQLException {
-        System.out.println("selectTable - sqlCommand  que chegou: "  +selectTable);
+        System.out.println("SELECT TABLE - sqlCommand  que chegou: "  +selectTable);
         ResultSet resultSet = null;
         Connection con = null;
         Statement statement = null;
@@ -140,19 +140,15 @@ public class StatementSQLite {
             resultSet = statement.executeQuery(selectTable);
             
             System.out.println("Select command executed.");
-            //System.out.println("SELECT TABLE teste> " +resultSet.getString("problem") +", " +resultSet.getString("filename") +", " +resultSet.getString("lps"));
+
             return resultSet;
 
         } catch (SQLException e1) {
-            System.out.println("E1: " +e1.getMessage());
-            e1.getMessage();
+            e1.printStackTrace();
             return null;
 
-        } finally {
+        } /*finally {
             try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
                 if (statement != null) {
                     statement.close();
                 }
@@ -161,67 +157,9 @@ public class StatementSQLite {
                     con.close();
                 }
             } catch (SQLException e3) {
-                e3.getStackTrace();
-                System.out.println(e3.getMessage());
+                e3.printStackTrace();
             }
-        }
+        }*/
 
     }
-    /*
-    public Boolean deleteTransaction(String problemID, String sqlCommand){
-        ResultSet resultSet = null;
-        Connection conn = null;
-        PreparedStatement preparedStatement = null;
-
-        try {
-            conn = this.connect();
-            if (conn == null) {
-                return false;
-            }
-            conn.setAutoCommit(false);
-            preparedStatement = conn.prepareStatement(sqlCommand,Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, problemID);
-
-
-            //for INSERT, UPDATE or DELETE use the executeUpdate() method
-            int rowAffected = preparedStatement.executeUpdate();
-
-            resultSet = preparedStatement.getGeneratedKeys();
-
-            if (rowAffected != 1) {
-                System.out.println("Rollback, row affected FALSE");
-                conn.rollback();
-            }
-            conn.commit();
-        } catch (SQLException e1) {
-            try {
-                if (conn != null) {
-                    System.out.println("SQLException Rollback,conn != null");
-                    conn.rollback();
-                }
-            } catch (SQLException e2) {
-                e1.getStackTrace();
-                System.out.println(e2.getMessage());
-            }
-            e1.getStackTrace();
-            System.out.println(e1.getMessage());
-        } finally {
-            try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-                if (preparedStatement != null) {
-                    preparedStatement.close();
-                }
-                if (conn != null) {
-
-                    conn.close();
-                }
-            } catch (SQLException e3) {
-                e3.getStackTrace();
-                System.out.println(e3.getMessage());
-            }
-        }
-        return true;
-    }*/
 }
