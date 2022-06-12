@@ -134,6 +134,8 @@ public class ProblemService {
         String deleteProblemById = "DELETE FROM problem WHERE problem = ?;" ;
         Problem problemObj = new Problem();
         problemObj.problem = problemID.trim().toUpperCase();
+        problemObj.filename = null;
+        problemObj.lps = null;
 
         StatementSQLite transaction = new StatementSQLite();
         Boolean verifyPersistence = transaction.prepareStatementTransaction(problemObj, deleteProblemById);

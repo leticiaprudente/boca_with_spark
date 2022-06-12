@@ -151,13 +151,10 @@ public class Problems {
                         res.type("application/json");
                         return("{\"error_msg\":\"Oh no :(\"}");
                     }
-
                 }catch (SQLException e){
-                    e.getStackTrace();
+                    e.printStackTrace();
                 }
-
                 File dir = new File("Files\\ExpectedAnswer\\"+req.params(":problem").trim().toUpperCase());
-                System.out.println("dir: " +dir);
                 if (dir.exists()){
                     System.out.println("The directory exists");
                     dir.delete();
