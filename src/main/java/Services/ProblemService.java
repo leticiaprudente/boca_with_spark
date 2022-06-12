@@ -93,7 +93,7 @@ public class ProblemService {
 
         JsonObject jsonObject = new JsonObject(); //não pode ser null por causa do add property! precisa estar instanciado
 
-        if(resultSet.wasNull()){
+        if(!resultSet.next()){
             System.out.println("searchProblemByID: result set eh nulo");
             jsonObject = null;
         } else {
@@ -105,18 +105,15 @@ public class ProblemService {
     }
 
     public static JsonObject beforeDeleteProblemByID(String problemID) throws SQLException{
-        JsonObject jsonObjectVerify = new JsonObject();
+        JsonObject jsonObjectVerify;
         JsonObject jsonObjectDelete = new JsonObject();
 
         try {
             jsonObjectVerify = searchProblemByID(problemID);
 
             if( jsonObjectVerify != null ){
-                System.out.println("retornou pq existe, AMENO");
-
                 jsonObjectDelete.addProperty("problem", problemID);
             }else{
-                System.out.println("nulo SIM");
                 jsonObjectDelete = null;
             }
         }catch (SQLException e){
