@@ -1,4 +1,4 @@
-#LP2: Projeto Final com [Sparkjava](https://sparkjava.com/)
+# LP2: Projeto Final com [Sparkjava](https://sparkjava.com/)
 
 ### Aluna: Leticia Macedo Prudente de Carvalho
 ### RA: 1460281813024
