@@ -29,11 +29,12 @@
 `http://localhost:4567/problem/searchAllProblems`
 - **Get By ID**:
 `http://localhost:4567/problem/searchProblemByID/<problemID>`
-- **Delete**
+- **Delete By ID**
 `http://localhost:4567/problem/deleteProblemByID/<problemID>`
 
 #### - ExpectedAnswer
-
+- **Post**:
+`http://localhost:4567/expectedAnswer/addExpectedAnswer`
 
 ## Postman File
 - 📄 [**Sparkjava-Boca-Reqs**](/Postman/SparkjavaBOCA.postman_collection.json)
