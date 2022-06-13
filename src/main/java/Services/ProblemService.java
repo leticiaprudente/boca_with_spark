@@ -3,15 +3,11 @@ package Services;
 import Classes.Problem;
 import Classes.StatementSQLite;
 
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Locale;
 
 public class ProblemService {
     public static Integer beforeAddProblem(Problem problem) throws Exception {
@@ -99,10 +95,9 @@ public class ProblemService {
 
         ResultSet resultSet = select.selectTable(selectProblemById);
 
-        JsonObject jsonObject = new JsonObject(); //não pode ser null por causa do add property! precisa estar instanciado
+        JsonObject jsonObject = new JsonObject(); //it can't be null because of the add property! it must be instantiated
 
         if(!resultSet.next()){
-            System.out.println("searchProblemByID: result set eh nulo");
             jsonObject = null;
 
         } else {

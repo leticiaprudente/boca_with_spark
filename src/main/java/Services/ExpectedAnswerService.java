@@ -1,23 +1,34 @@
 package Services;
 
 import Classes.ExpectedAnswer;
+import Classes.Problem;
 import com.google.gson.JsonObject;
 
 import java.io.*;
 import java.sql.SQLException;
 
+import static Services.ProblemService.searchProblemByID;
+
 public class ExpectedAnswerService {
-    public Boolean beforeAddExpectedAnswer(ExpectedAnswer expectedAnswer) {
-        JsonObject jsonObject = null;
+    public Integer beforeAddExpectedAnswer(ExpectedAnswer expectedAnswer) {
+        JsonObject jsonObject;
         try {
             if  ( (expectedAnswer.filename.trim().length() == 0) || (expectedAnswer.problem.trim().length() == 0) || (expectedAnswer.content.trim().length() == 0 ) ) {
                 System.out.println("Null field.");
-                return false;
+                return null;
             }
+            Problem problem = new Problem();
+            problem.problem = expectedAnswer.problem;
+            jsonObject = searchProblemByID(problem.problem);
+            if( jsonObject == null ){
+                System.out.println("Problem doesn't exists.");
+                return 0;
+            }
+
         }catch (Exception e){
             e.getStackTrace();
         }
-        return true;
+        return 1;
     }
 
     public static ExpectedAnswer addExpectedAnswer(ExpectedAnswer expectedAnswer) throws Exception{
@@ -38,10 +49,5 @@ public class ExpectedAnswerService {
         return expectedAnswer;
     }
 
-
-
-    /*public static JsonObject searchExpectedAnswerByID(String problemID) throws SQLException {
-
-    }*/
 
 }

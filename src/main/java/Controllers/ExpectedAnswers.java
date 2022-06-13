@@ -13,7 +13,7 @@ import java.util.Map;
 import static spark.Spark.*;
 
 public class ExpectedAnswers {
-    private static Map<String, Problem> problems = new HashMap<String, Problem>();
+    private static final Map<String, Problem> problems = new HashMap<String, Problem>();
 
     public static void createExpectedAnswersRoutes() {
         /*errors*/
@@ -33,24 +33,31 @@ public class ExpectedAnswers {
             before("/addExpectedAnswer", (req, res) -> {
                 JsonToExpectedAnswerTransformer jsonToExpectedAnswerTransformer = new JsonToExpectedAnswerTransformer();
                 ExpectedAnswer expectedAnswer = jsonToExpectedAnswerTransformer.stringToObject(req.body());
-                Boolean status = null;
+                Integer verify = null;
                 try {
                     ExpectedAnswerService expectedAnswerService = new ExpectedAnswerService();
-                    status = expectedAnswerService.beforeAddExpectedAnswer(expectedAnswer);
+                    verify = expectedAnswerService.beforeAddExpectedAnswer(expectedAnswer);
                 } catch (Exception e) {
                     e.getStackTrace();
                 }
 
-                if (status == false) {
+                if (verify == null) {
                     res.type("application/json");
                     halt(400, "{\"error_code\":\"400\"," +
                             "\"error_msg\":\"What do you say to empty fields? Not today! All fields are required!!!\"}");
+                }
+
+                if (verify == 0){
+                    res.status(205);
+                    res.type("application/json");
+                    halt(205,"{\"error_code\":\"205\"," +
+                            "\"error_msg\":\"The server successfully processed the request but Problem doesn't exists in the database.\"}");
                 }
             });
 
 
             post("/addExpectedAnswer", "application/json", (req, res) -> {
-
+                //content: enconding base64
                 String bodyContent = req.body();
                 JsonToExpectedAnswerTransformer jsonToEA = new JsonToExpectedAnswerTransformer();
                 ExpectedAnswer expectedAnswer = jsonToEA.stringToObject(bodyContent);
