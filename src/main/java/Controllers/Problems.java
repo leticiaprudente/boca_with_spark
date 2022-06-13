@@ -4,11 +4,9 @@ import static spark.Spark.*;
 
 import java.io.File;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
-import Classes.JsonToProblemTransformer;
-import Classes.ProblemToJsonTransformer;
+import Classes.JsonToObjectTransformer;
+import Classes.ObjectToJsonTransformer;
 import Classes.Problem;
 import Services.ProblemService;
 
@@ -16,7 +14,6 @@ import com.google.gson.JsonObject;
 
 
 public class Problems {
-    private static Map<String, Problem> problems = new HashMap<String, Problem>();
 
     public static void createProblemRoutes(){
         /*errors*/
@@ -36,8 +33,8 @@ public class Problems {
         path("/problem", () -> {
             //filter: all fields are mandatory
             before("/addProblem", (req, res) -> {
-                JsonToProblemTransformer jsonToProblemTransformer = new JsonToProblemTransformer();
-                Problem problem = jsonToProblemTransformer.stringToObject(req.body());
+                JsonToObjectTransformer jsonToProblemTransformer = new JsonToObjectTransformer();
+                Problem problem = jsonToProblemTransformer.stringToProblem(req.body());
                 Integer status = null;
                 try{
                     ProblemService problemservice = new ProblemService();
@@ -63,11 +60,11 @@ public class Problems {
                 //RETORNO DA REQUISIÇÃO
 
                 String bodyContent = req.body();
-                JsonToProblemTransformer jsonToProblemTransformer = new JsonToProblemTransformer();
-                Problem problem = jsonToProblemTransformer.stringToObject(bodyContent);
+                JsonToObjectTransformer jsonToProblemTransformer = new JsonToObjectTransformer();
+                Problem problem = jsonToProblemTransformer.stringToProblem(bodyContent);
 
                 ProblemService problemservice = new ProblemService();
-                ProblemToJsonTransformer problemToJsonTransformer = new ProblemToJsonTransformer();
+                ObjectToJsonTransformer problemToJsonTransformer = new ObjectToJsonTransformer();
                 Problem problemCreated = new Problem();
 
                 try {
@@ -79,7 +76,7 @@ public class Problems {
                     e.getStackTrace();
 
                 };
-                return problemToJsonTransformer.objectToString(problemCreated);
+                return problemToJsonTransformer.problemToString(problemCreated);
 
             });
 

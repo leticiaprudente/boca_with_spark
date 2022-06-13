@@ -1,19 +1,14 @@
 package Controllers;
 
 import Classes.ExpectedAnswer;
-import Classes.ExpectedAnswerToJsonTransformer;
-import Classes.JsonToExpectedAnswerTransformer;
-import Classes.Problem;
+import Classes.ObjectToJsonTransformer;
+import Classes.JsonToObjectTransformer;
 import Services.ExpectedAnswerService;
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-
 import static spark.Spark.*;
 
 public class ExpectedAnswers {
-    private static final Map<String, Problem> problems = new HashMap<String, Problem>();
 
     public static void createExpectedAnswersRoutes() {
         /*errors*/
@@ -31,8 +26,8 @@ public class ExpectedAnswers {
         //expected Answer routes
         path("/expectedAnswer", () -> {
             before("/addExpectedAnswer", (req, res) -> {
-                JsonToExpectedAnswerTransformer jsonToExpectedAnswerTransformer = new JsonToExpectedAnswerTransformer();
-                ExpectedAnswer expectedAnswer = jsonToExpectedAnswerTransformer.stringToObject(req.body());
+                JsonToObjectTransformer jsonToExpectedAnswerTransformer = new JsonToObjectTransformer();
+                ExpectedAnswer expectedAnswer = jsonToExpectedAnswerTransformer.stringToExpectedAnswer(req.body());
                 Integer verify = null;
                 try {
                     ExpectedAnswerService expectedAnswerService = new ExpectedAnswerService();
@@ -58,11 +53,11 @@ public class ExpectedAnswers {
             post("/addExpectedAnswer", "application/json", (req, res) -> {
                 //content: enconding base64
                 String bodyContent = req.body();
-                JsonToExpectedAnswerTransformer jsonToEA = new JsonToExpectedAnswerTransformer();
-                ExpectedAnswer expectedAnswer = jsonToEA.stringToObject(bodyContent);
+                JsonToObjectTransformer jsonToEA = new JsonToObjectTransformer();
+                ExpectedAnswer expectedAnswer = jsonToEA.stringToExpectedAnswer(bodyContent);
 
                 ExpectedAnswerService expectedAnswerService = new ExpectedAnswerService();
-                ExpectedAnswerToJsonTransformer expectedAnswerToJson = new ExpectedAnswerToJsonTransformer();
+                ObjectToJsonTransformer expectedAnswerToJson = new ObjectToJsonTransformer();
                 ExpectedAnswer expectedAnswerCreated = new ExpectedAnswer();
 
                 try {
@@ -74,7 +69,7 @@ public class ExpectedAnswers {
                     e.getStackTrace();
 
                 }
-                return expectedAnswerToJson.objectToString(expectedAnswerCreated);
+                return expectedAnswerToJson.expectedAnswerToString(expectedAnswerCreated);
 
             });
 
