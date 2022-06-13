@@ -31,7 +31,7 @@ public class ExpectedAnswerService {
         return 1;
     }
 
-    public static ExpectedAnswer addExpectedAnswer(ExpectedAnswer expectedAnswer) throws Exception{
+    public static ExpectedAnswer addExpectedAnswer(ExpectedAnswer expectedAnswer) throws SQLException{
         File dir = new File("Files\\ExpectedAnswer\\"+expectedAnswer.problem);
         if (!dir.exists()){
             dir.mkdirs();
@@ -48,6 +48,4 @@ public class ExpectedAnswerService {
         }
         return expectedAnswer;
     }
-
-
 }

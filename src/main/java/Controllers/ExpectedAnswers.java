@@ -55,7 +55,6 @@ public class ExpectedAnswers {
                 }
             });
 
-
             post("/addExpectedAnswer", "application/json", (req, res) -> {
                 //content: enconding base64
                 String bodyContent = req.body();
@@ -74,7 +73,7 @@ public class ExpectedAnswers {
                 } catch (SQLException e){
                     e.getStackTrace();
 
-                };
+                }
                 return expectedAnswerToJson.objectToString(expectedAnswerCreated);
 
             });
