@@ -56,9 +56,6 @@ public class Problems {
             });
 
             post("/addProblem", "application/json", (req, res) -> {
-                //RECEBER, TRANSFORMAR E ENVIAR PARA O SERVICE
-                //RETORNO DA REQUISIÇÃO
-
                 String bodyContent = req.body();
                 JsonToObjectTransformer jsonToProblemTransformer = new JsonToObjectTransformer();
                 Problem problem = jsonToProblemTransformer.stringToProblem(bodyContent);
@@ -128,6 +125,14 @@ public class Problems {
                 try{
                     ProblemService problemService = new ProblemService();
                     verify = problemService.beforeDeleteProblemByID(req.params(":problem"));
+
+                    //AJUSTAR
+                    if( (req.params(":problem").trim().length()) == 0 ){
+                        res.type("application/json");
+                        halt(205,"{\"error_code\":\"205\"," +
+                                "\"error_msg\":\"The server has successfully processed the request but it is necessary to send the Problem ID.\"}");
+                    }
+
                     if(!verify){
                         res.type("application/json");
                         halt(205,"{\"error_code\":\"205\"," +

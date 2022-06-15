@@ -6,6 +6,7 @@ import Classes.StatementSQLite;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -35,7 +36,7 @@ public class ProblemService {
             String insertIntoTableProblem = "INSERT INTO problem (problem, filename, lps) VALUES (?, ? ,?)";
 
             StatementSQLite transaction = new StatementSQLite();
-            Boolean verifyPersistence = transaction.prepareStatementTransaction(problem, insertIntoTableProblem);
+            Boolean verifyPersistence = transaction.prepareStatementTransactionProblem(problem, insertIntoTableProblem);
 
             if ( !verifyPersistence ) {
                 return null;
@@ -133,7 +134,12 @@ public class ProblemService {
         problemObj.lps = null;
 
         StatementSQLite transaction = new StatementSQLite();
-        Boolean verifyPersistence = transaction.prepareStatementTransaction(problemObj, deleteProblemById);
+        Boolean verifyPersistence = transaction.prepareStatementTransactionProblem(problemObj, deleteProblemById);
+
+        File dir = new File("Files\\ExpectedAnswer\\"+problemObj.problem);
+        if (dir.exists()){
+            dir.delete();
+        }
 
         return verifyPersistence;
 

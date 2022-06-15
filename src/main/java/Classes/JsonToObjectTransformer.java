@@ -17,9 +17,9 @@ public class JsonToObjectTransformer { //criar interface (POO)
         return problem;
     }
 
-    public static SourceCodeHistory stringToSourceCode(String bodyContent) throws Exception {
+    public static SourceCode stringToSourceCode(String bodyContent) throws Exception {
         Gson gson = new Gson();
-        SourceCodeHistory sourceCode = gson.fromJson(bodyContent, SourceCodeHistory.class);
+        SourceCode sourceCode = gson.fromJson(bodyContent, SourceCode.class);
 
         return sourceCode;
     }

@@ -3,9 +3,14 @@ package Controllers;
 import Classes.ExpectedAnswer;
 import Classes.ObjectToJsonTransformer;
 import Classes.JsonToObjectTransformer;
+import Classes.Problem;
 import Services.ExpectedAnswerService;
+import Services.ProblemService;
+import com.google.gson.JsonObject;
 
 import java.sql.SQLException;
+
+import static Services.ProblemService.searchProblemByID;
 import static spark.Spark.*;
 
 public class ExpectedAnswers {
@@ -71,6 +76,37 @@ public class ExpectedAnswers {
                 }
                 return expectedAnswerToJson.expectedAnswerToString(expectedAnswerCreated);
 
+            });
+
+            get("/searchAnswersByProblemID/:problem", (req, res) -> {
+                JsonObject jsonObject = null;
+
+                try{
+                    Problem problem = new Problem();
+                    problem.problem = req.params(":problem");
+                    jsonObject = searchProblemByID(problem.problem);
+                    if(jsonObject==null){
+                        res.type("application/json");
+                        halt(205,"{\"error_code\":\"205\"," +
+                                "\"error_msg\":\"The server successfully processed the request but the Problem doesn't exists in the database.\"}");
+                    }
+
+                    jsonObject = null;
+                    ExpectedAnswerService expectedAnswerService = new ExpectedAnswerService();
+                    jsonObject = expectedAnswerService.searchAnswersByProblemID(req.params(":problem"));
+
+                    if(jsonObject==null){
+                        res.type("application/json");
+                        halt(205,"{\"error_code\":\"205\"," +
+                                "\"error_msg\":\"The server has successfully processed the request but there are no Expected Answer registered for this Problem.\"}");
+                    }
+
+                }catch(SQLException e){
+                    e.getStackTrace();
+                }
+
+                res.type("application/json");
+                return jsonObject;
             });
 
         });
