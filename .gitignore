@@ -27,4 +27,4 @@ hs_err_pid*
 Files/ExpectedAnswer/*
 
 # SQLite DB file
-/javasparkbocadb.db
+!/javasparkbocadb.db
