@@ -2,23 +2,49 @@ package Classes;
 
 public class ExpectedAnswer {
 
-    public String filename, problem, content;
+    public String inputFilename, inputContent, outputFilename, outputContent, problem ;
 
-    public ExpectedAnswer(String filename, String problem, String content) {
-        this.filename = filename;
+    public ExpectedAnswer(String inputFilename, String inputContent, String outputFilename, String outputContent, String problem) {
+        this.inputFilename = inputFilename;
+        this.inputContent = inputContent ;
+        this.outputFilename = outputFilename;
+        this.outputContent = outputContent ;
         this.problem = problem;
-        this.content = content;
     }
 
     public ExpectedAnswer() {
     }
 
-    public String getFilename() {
-        return filename;
+    public String getInputFilename() {
+        return inputFilename;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
+    public void setInputFilename(String inputFilename) {
+        this.inputFilename = inputFilename;
+    }
+
+    public String getInputContent() {
+        return inputContent;
+    }
+
+    public void setInputContent(String inputContent) {
+        this.inputContent = inputContent;
+    }
+
+    public String getOutputFilename() {
+        return outputFilename;
+    }
+
+    public void setOutputFilename(String outputFilename) {
+        this.outputFilename = outputFilename;
+    }
+
+    public String getOutputContent() {
+        return outputContent;
+    }
+
+    public void setOutputContent(String outputContent) {
+        this.outputContent = outputContent;
     }
 
     public String getProblem() {
@@ -27,13 +53,5 @@ public class ExpectedAnswer {
 
     public void setProblem(String problem) {
         this.problem = problem;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
     }
 }

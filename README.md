@@ -20,7 +20,7 @@
 ## Routes
 
 #### - Hello World
-`http://localhost:4567/hello`
+- **Post**:`http://localhost:4567/hello`
 
 #### - Problem
 - **Post**:
@@ -29,14 +29,21 @@
 `http://localhost:4567/problem/searchAllProblems`
 - **Get By ID**:
 `http://localhost:4567/problem/searchProblemByID/<problemID>`
-- **Delete**
+- **Delete By ID**
 `http://localhost:4567/problem/deleteProblemByID/<problemID>`
 
-#### - ExpectedAnswer
+#### - Expected Answer
+- **Post**:
+`http://localhost:4567/expectedAnswer/addExpectedAnswer`
+- **Get All By Problem ID**:
+`http://localhost:4567/expectedAnswer/searchAnswersByProblemID/<problemID>`
 
+#### - Source Code
+- **Post**: `http://localhost:4567/sourceCode/addSourceCode`
 
 ## Postman File
-- 📄 [**Sparkjava-Boca-Reqs**](/Postman/SparkjavaBOCA.postman_collection.json)
+- 📄 [**Sparkjava-Boca-Postman**](/Postman/SparkjavaBOCA.postman_collection.json)
 
-## Stop
-`stop();`
+## Stop Application
+- `stop();`
+- `ctrl+c`

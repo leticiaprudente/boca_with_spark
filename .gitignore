@@ -23,5 +23,8 @@
 hs_err_pid*
 /target/
 
-# Files
+# Files from Postman requests
 Files/ExpectedAnswer/*
+
+# SQLite DB file
+!/javasparkbocadb.db

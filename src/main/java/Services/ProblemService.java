@@ -3,18 +3,19 @@ package Services;
 import Classes.Problem;
 import Classes.StatementSQLite;
 
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import java.sql.PreparedStatement;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Locale;
+
+import org.apache.commons.io.FileUtils;
 
 public class ProblemService {
-    public static Integer beforeAddProblem(Problem problem) throws Exception {
+    public static Integer beforeAddProblem(Problem problem) {
 
         JsonObject jsonObject;
         try {
@@ -39,7 +40,7 @@ public class ProblemService {
             String insertIntoTableProblem = "INSERT INTO problem (problem, filename, lps) VALUES (?, ? ,?)";
 
             StatementSQLite transaction = new StatementSQLite();
-            Boolean verifyPersistence = transaction.prepareStatementTransaction(problem, insertIntoTableProblem);
+            Boolean verifyPersistence = transaction.prepareStatementTransactionProblem(problem, insertIntoTableProblem);
 
             if ( !verifyPersistence ) {
                 return null;
@@ -85,8 +86,7 @@ public class ProblemService {
             }
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            e.getMessage();
+            e.printStackTrace();
         }
         return  jsonObject ;
 
@@ -94,15 +94,14 @@ public class ProblemService {
 
     public static JsonObject searchProblemByID(String problemID) throws SQLException{
         String selectProblemById = "SELECT filename, problem, lps FROM problem WHERE problem = '" +problemID.trim().toUpperCase()+ "'" ;
-
+        System.out.println("select problem by id: " +selectProblemById);
         StatementSQLite select = new StatementSQLite();
 
         ResultSet resultSet = select.selectTable(selectProblemById);
 
-        JsonObject jsonObject = new JsonObject(); //não pode ser null por causa do add property! precisa estar instanciado
+        JsonObject jsonObject = new JsonObject(); //it can't be null because of the add property! it must be instantiated
 
         if(!resultSet.next()){
-            System.out.println("searchProblemByID: result set eh nulo");
             jsonObject = null;
 
         } else {
@@ -130,7 +129,7 @@ public class ProblemService {
         return true;
     }
 
-    public static Boolean deleteProblemByID(String problemID) throws SQLException{
+    public static Boolean deleteProblemByID(String problemID) throws SQLException, IOException {
         String deleteProblemById = "DELETE FROM problem WHERE problem = ?;" ;
         Problem problemObj = new Problem();
         problemObj.problem = problemID.trim().toUpperCase();
@@ -138,7 +137,11 @@ public class ProblemService {
         problemObj.lps = null;
 
         StatementSQLite transaction = new StatementSQLite();
-        Boolean verifyPersistence = transaction.prepareStatementTransaction(problemObj, deleteProblemById);
+        Boolean verifyPersistence = transaction.prepareStatementTransactionProblem(problemObj, deleteProblemById);
+        //File dir = new File("Files\\ExpectedAnswer\\"+problemObj.problem);
+
+        FileUtils.deleteDirectory(new File("Files\\ExpectedAnswer\\"+problemObj.problem));
+
 
         return verifyPersistence;
 

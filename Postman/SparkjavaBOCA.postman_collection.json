@@ -10,13 +10,13 @@
 			"name": "Problem",
 			"item": [
 				{
-					"name": "PostProblemOK",
+					"name": "PostProblemEmptyField",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"filename\" : \"pradinho.py\",\r\n    \"problem\" : \"A\",\r\n    \"lps\" : \"java|c|c++|python\"\r\n}",
+							"raw": "{\r\n    \"filename\" : \"\",\r\n    \"problem\" : \"B\",\r\n    \"lps\" : \"java\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -39,13 +39,42 @@
 					"response": []
 				},
 				{
-					"name": "PostProblemEmptyField",
+					"name": "PostProblemAOK",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"filename\" : \"\",\r\n    \"problem\" : \"B\",\r\n    \"lps\" : \"java\"\r\n}",
+							"raw": "{\r\n    \"filename\" : \"zerinho.py\",\r\n    \"problem\" : \"A\",\r\n    \"lps\" : \"java|c|c++|python\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/problem/addProblem",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"problem",
+								"addProblem"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PostProblemBOK",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"filename\" : \"mergulho.py\",\r\n    \"problem\" : \"B\",\r\n    \"lps\" : \"java|c|c++|python\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -100,7 +129,7 @@
 					"response": []
 				},
 				{
-					"name": "GetProblemByIdOK",
+					"name": "GetProblemByIDAOK",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -128,7 +157,35 @@
 					"response": []
 				},
 				{
-					"name": "GetProblemByIdNotExists",
+					"name": "GetProblemByIDBOK",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:4567/problem/searchProblemByID/B",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"problem",
+								"searchProblemByID",
+								"B"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetProblemByIDNotExists",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -156,7 +213,7 @@
 					"response": []
 				},
 				{
-					"name": "DeleteProblemByIDOK",
+					"name": "DeleteProblemByIDAOK",
 					"request": {
 						"method": "DELETE",
 						"header": [],
@@ -180,6 +237,36 @@
 								"problem",
 								"deleteProblemByID",
 								"A"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteProblemByIDBOK",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/problem/deleteProblemByID/B",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"problem",
+								"deleteProblemByID",
+								"B"
 							]
 						}
 					},
@@ -218,16 +305,16 @@
 			]
 		},
 		{
-			"name": "Answer",
+			"name": "ExpectedAnswer",
 			"item": [
 				{
-					"name": "PostExpectedAnswerOK",
+					"name": "PostExpectedAnswerEmptyField",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"filename\" : \"respostaA.py\",\r\n    \"problem\" : \"A\",\r\n    \"content\" : \"println('Hellow!')\"\r\n}",
+							"raw": "{\r\n    \"inputFilename\" : \"ProblemACase1Input.txt\",\r\n    \"inputContent\" : \"MSAxIDA=\",\r\n    \"outputFilename\" : \"ProblemACase1Output.txt\",\r\n    \"outputContent\" : \"\",\r\n    \"problem\" : \"A\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -250,13 +337,13 @@
 					"response": []
 				},
 				{
-					"name": "PostExpectedAnswerEmptyField",
+					"name": "PostExpectedAnswerACase1OK",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"filename\" : \"respostaA.txt\",\r\n    \"problem\" : \"A\",\r\n    \"content\" : \"\"\r\n}",
+							"raw": "{\r\n    \"inputFilename\" : \"ProblemACase1Input.txt\",\r\n    \"inputContent\" : \"MSAxIDA=\",\r\n    \"outputFilename\" : \"ProblemACase1Output.txt\",\r\n    \"outputContent\" : \"Qw==\",\r\n    \"problem\" : \"A\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -273,6 +360,356 @@
 							"path": [
 								"expectedAnswer",
 								"addExpectedAnswer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PostExpectedAnswerACase2OK",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"inputFilename\" : \"ProblemACase2Input.txt\",\r\n    \"inputContent\" : \"MCAwIDA=\",\r\n    \"outputFilename\" : \"ProblemACase2Output.txt\",\r\n    \"outputContent\" : \"Kg==\",\r\n    \"problem\" : \"A\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/expectedAnswer/addExpectedAnswer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"expectedAnswer",
+								"addExpectedAnswer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PostExpectedAnswerACase3OK",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"inputFilename\" : \"ProblemACase3Input.txt\",\r\n    \"inputContent\" : \"MSAwIDA=\",\r\n    \"outputFilename\" : \"ProblemACase3Output.txt\",\r\n    \"outputContent\" : \"QQ==\",\r\n    \"problem\" : \"A\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/expectedAnswer/addExpectedAnswer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"expectedAnswer",
+								"addExpectedAnswer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PostExpectedAnswerBCase1OK",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"inputFilename\" : \"ProblemBCase1Input.txt\",\r\n    \"inputContent\" : \"NSAzCjMgMSA1\",\r\n    \"outputFilename\" : \"ProblemBCase1Output.txt\",\r\n    \"outputContent\" : \"MiA0\",\r\n    \"problem\" : \"B\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/expectedAnswer/addExpectedAnswer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"expectedAnswer",
+								"addExpectedAnswer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PostExpectedAnswerBCase2OK",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"inputFilename\" : \"ProblemBCase2Input.txt\",\r\n    \"inputContent\" : \"NiA2CjYgMSAzIDIgNSA0\",\r\n    \"outputFilename\" : \"ProblemBCase2Output.txt\",\r\n    \"outputContent\" : \"Kg==\",\r\n    \"problem\" : \"B\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/expectedAnswer/addExpectedAnswer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"expectedAnswer",
+								"addExpectedAnswer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAnswersProblemByIDAOK",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:4567/expectedAnswer/searchAnswersByProblemID/A",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"expectedAnswer",
+								"searchAnswersByProblemID",
+								"A"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAnswersProblemByIDBOK",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:4567/expectedAnswer/searchAnswersByProblemID/B",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"expectedAnswer",
+								"searchAnswersByProblemID",
+								"B"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAnswersProblemByIDBNotExists",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:4567/expectedAnswer/searchAnswersByProblemID/C",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"expectedAnswer",
+								"searchAnswersByProblemID",
+								"C"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SourceCode",
+			"item": [
+				{
+					"name": "PostSourceCodeEmptyField",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"author\":\"lnadalete\",\r\n\"filename\" : \"zerinho.py\",\r\n\"problem\" : \"\",\r\n\"source_code\" : \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/sourceCode/addSourceCode",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"sourceCode",
+								"addSourceCode"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PostSourceCodeProblemASuccess",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"author\":\"lnadalete\",\r\n\"filename\" : \"zerinho.py\",\r\n\"problem\" : \"A\",\r\n\"source_code\" : \"I2VudHJ5CkEsIEIsIEMgPSBpbnB1dCgpLnNwbGl0KCkKCiNwcm9jZXNzaW5nCndpbm5lciA9IE5vbmUKaWYgQSE9IEIgYW5kIEEgIT0gQzoKCXdpbm5lciA9ICdBJwplbGlmIEIgIT0gQSBhbmQgQiAhPUM6CiAgd2lubmVyID0gJ0InCmVsaWYgQyAhPSBBIGFuZCBDICE9IEI6CiAgd2lubmVyID0gJ0MnCmVsc2U6CiAgd2lubmVyID0gJyonCiAgCiNleGl0CnByaW50KHdpbm5lcik=\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/sourceCode/addSourceCode",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"sourceCode",
+								"addSourceCode"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PostSourceCodeProblemAFail",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"author\":\"lnadalete\",\r\n\"filename\" : \"zerinho.py\",\r\n\"problem\" : \"A\",\r\n\"source_code\" : \"I2VudHJ5CkEsIEIsIEMgPSBpbnB1dCgpLnNwbGl0KCkKcHJpbnQod2lubmVyKQ==\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/sourceCode/addSourceCode",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"sourceCode",
+								"addSourceCode"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PostSourceCodeProblemBSuccess",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"author\":\"lnadalete\",\r\n\"filename\" : \"zerinho.py\",\r\n\"problem\" : \"B\",\r\n\"source_code\" : \"I2VudHJ5Cm4sIHIgPSBpbnB1dCgpLnNwbGl0KCkKbSA9IFt4IGZvciB4IGluIHJhbmdlKDEsIGludChuKSsxKV0KbCA9IFtpbnQoeCkgZm9yIHggaW4gaW5wdXQoKS5zcGxpdCgpXQoKI3Byb2Nlc3NpbmcKcyA9IFt4IGZvciB4IGluIG0gaWYgeCBub3QgaW4gbF0KaWYgcyA9PSBbXToKICBzID0gJyonCgojZXhpdAppZiBzICE9ICcqJzoKICBmb3IgeCBpbiByYW5nZShsZW4ocykpOgogICAgcHJpbnQoc1t4XSwgZW5kPScgJykKICBwcmludCgnJykKZWxzZToKICBwcmludChzKQ==\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/sourceCode/addSourceCode",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"sourceCode",
+								"addSourceCode"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PostSourceCodeProblemBFail",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"author\":\"lnadalete\",\r\n\"filename\" : \"pradinho.py\",\r\n\"problem\" : \"B\",\r\n\"source_code\" : \"I2VudHJ5Cm4sIHIgPSBpbnB1dCgpLnNwbGl0KCk=\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4567/sourceCode/addSourceCode",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4567",
+							"path": [
+								"sourceCode",
+								"addSourceCode"
 							]
 						}
 					},

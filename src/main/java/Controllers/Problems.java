@@ -4,11 +4,9 @@ import static spark.Spark.*;
 
 import java.io.File;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
-import Classes.JsonToProblemTransformer;
-import Classes.ProblemToJsonTransformer;
+import Classes.JsonToObjectTransformer;
+import Classes.ObjectToJsonTransformer;
 import Classes.Problem;
 import Services.ProblemService;
 
@@ -16,7 +14,6 @@ import com.google.gson.JsonObject;
 
 
 public class Problems {
-    private static Map<String, Problem> problems = new HashMap<String, Problem>();
 
     public static void createProblemRoutes(){
         /*errors*/
@@ -36,21 +33,19 @@ public class Problems {
         path("/problem", () -> {
             //filter: all fields are mandatory
             before("/addProblem", (req, res) -> {
-                JsonToProblemTransformer jsonToProblemTransformer = new JsonToProblemTransformer();
-                Problem problem = jsonToProblemTransformer.stringToObject(req.body());
+                JsonToObjectTransformer jsonToProblemTransformer = new JsonToObjectTransformer();
+                Problem problem = jsonToProblemTransformer.stringToProblem(req.body());
                 Integer status = null;
-                try{
-                    ProblemService problemservice = new ProblemService();
-                    status = problemservice.beforeAddProblem(problem);
-                }catch (SQLException e){
-                    e.getStackTrace();
-                }
+                ProblemService problemservice = new ProblemService();
+                status = problemservice.beforeAddProblem(problem);
 
                 if  (status == null) {
+                    res.status(400);
                     res.type("application/json");
                     halt(400, "{\"error_code\":\"400\"," +
                             "\"error_msg\":\"What do you say to empty fields? Not today! All fields are required!!!\"}");
                 }else if(status == 0){
+                    res.status(205);
                     res.type("application/json");
                     halt(205,"{\"error_code\":\"205\"," +
                             "\"error_msg\":\"The server successfully processed the request but the Problem already exists.\"}");
@@ -59,15 +54,12 @@ public class Problems {
             });
 
             post("/addProblem", "application/json", (req, res) -> {
-                //RECEBER, TRANSFORMAR E ENVIAR PARA O SERVICE
-                //RETORNO DA REQUISIÇÃO
-
                 String bodyContent = req.body();
-                JsonToProblemTransformer jsonToProblemTransformer = new JsonToProblemTransformer();
-                Problem problem = jsonToProblemTransformer.stringToObject(bodyContent);
+                JsonToObjectTransformer jsonToProblemTransformer = new JsonToObjectTransformer();
+                Problem problem = jsonToProblemTransformer.stringToProblem(bodyContent);
 
                 ProblemService problemservice = new ProblemService();
-                ProblemToJsonTransformer problemToJsonTransformer = new ProblemToJsonTransformer();
+                ObjectToJsonTransformer problemToJsonTransformer = new ObjectToJsonTransformer();
                 Problem problemCreated = new Problem();
 
                 try {
@@ -76,10 +68,18 @@ public class Problems {
                     res.type("application/json");
 
                 } catch (SQLException e){
-                    e.getStackTrace();
+                    e.printStackTrace();
 
                 };
-                return problemToJsonTransformer.objectToString(problemCreated);
+
+                if( problemCreated == null ){
+                    res.status(406);
+                    res.type("application/json");
+                    return("{\"error_code\":\"406\"," +
+                            "\"error_msg\":\"Oh no :(\"}");
+                }
+
+                return problemToJsonTransformer.problemToString(problemCreated);
 
             });
 
@@ -90,7 +90,7 @@ public class Problems {
                     ProblemService problemservice = new ProblemService();
                     jsonObject = problemservice.searchAllProblems();
                 }catch(SQLException e){
-                    e.getStackTrace();
+                    e.printStackTrace();
                 }
                 if(jsonObject==null){
                     res.status(205);
@@ -113,13 +113,14 @@ public class Problems {
                     jsonObject = problemservice.searchProblemByID(req.params(":problem"));
 
                     if(jsonObject==null){
+                        res.status(205);
                         res.type("application/json");
                         halt(205,"{\"error_code\":\"205\"," +
                                 "\"error_msg\":\"The server successfully processed the request but the Problem doesn't exists in the database.\"}");
                     }
 
                 }catch(SQLException e){
-                    e.getStackTrace();
+                    e.printStackTrace();
                 }
 
                 res.type("application/json");
@@ -131,13 +132,23 @@ public class Problems {
                 try{
                     ProblemService problemService = new ProblemService();
                     verify = problemService.beforeDeleteProblemByID(req.params(":problem"));
+
+                    //AJUSTAR
+                    if( (req.params(":problem").trim().length()) == 0 ){
+                        res.status(205);
+                        res.type("application/json");
+                        halt(205,"{\"error_code\":\"205\"," +
+                                "\"error_msg\":\"The server has successfully processed the request but it is necessary to send the Problem ID.\"}");
+                    }
+
                     if(!verify){
+                        res.status(205);
                         res.type("application/json");
                         halt(205,"{\"error_code\":\"205\"," +
                                 "\"error_msg\":\"The server successfully processed the request but the Problem doesn't exists in the database.\"}");
                     }
                 }catch (SQLException e){
-                    e.getStackTrace();
+                    e.printStackTrace();
                 }
             });
 
