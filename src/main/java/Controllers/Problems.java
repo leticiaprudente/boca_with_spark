@@ -36,18 +36,16 @@ public class Problems {
                 JsonToObjectTransformer jsonToProblemTransformer = new JsonToObjectTransformer();
                 Problem problem = jsonToProblemTransformer.stringToProblem(req.body());
                 Integer status = null;
-                try{
-                    ProblemService problemservice = new ProblemService();
-                    status = problemservice.beforeAddProblem(problem);
-                }catch (SQLException e){
-                    e.getStackTrace();
-                }
+                ProblemService problemservice = new ProblemService();
+                status = problemservice.beforeAddProblem(problem);
 
                 if  (status == null) {
+                    res.status(400);
                     res.type("application/json");
                     halt(400, "{\"error_code\":\"400\"," +
                             "\"error_msg\":\"What do you say to empty fields? Not today! All fields are required!!!\"}");
                 }else if(status == 0){
+                    res.status(205);
                     res.type("application/json");
                     halt(205,"{\"error_code\":\"205\"," +
                             "\"error_msg\":\"The server successfully processed the request but the Problem already exists.\"}");
@@ -70,9 +68,17 @@ public class Problems {
                     res.type("application/json");
 
                 } catch (SQLException e){
-                    e.getStackTrace();
+                    e.printStackTrace();
 
                 };
+
+                if( problemCreated == null ){
+                    res.status(406);
+                    res.type("application/json");
+                    return("{\"error_code\":\"406\"," +
+                            "\"error_msg\":\"Oh no :(\"}");
+                }
+
                 return problemToJsonTransformer.problemToString(problemCreated);
 
             });
@@ -84,7 +90,7 @@ public class Problems {
                     ProblemService problemservice = new ProblemService();
                     jsonObject = problemservice.searchAllProblems();
                 }catch(SQLException e){
-                    e.getStackTrace();
+                    e.printStackTrace();
                 }
                 if(jsonObject==null){
                     res.status(205);
@@ -107,13 +113,14 @@ public class Problems {
                     jsonObject = problemservice.searchProblemByID(req.params(":problem"));
 
                     if(jsonObject==null){
+                        res.status(205);
                         res.type("application/json");
                         halt(205,"{\"error_code\":\"205\"," +
                                 "\"error_msg\":\"The server successfully processed the request but the Problem doesn't exists in the database.\"}");
                     }
 
                 }catch(SQLException e){
-                    e.getStackTrace();
+                    e.printStackTrace();
                 }
 
                 res.type("application/json");
@@ -128,18 +135,20 @@ public class Problems {
 
                     //AJUSTAR
                     if( (req.params(":problem").trim().length()) == 0 ){
+                        res.status(205);
                         res.type("application/json");
                         halt(205,"{\"error_code\":\"205\"," +
                                 "\"error_msg\":\"The server has successfully processed the request but it is necessary to send the Problem ID.\"}");
                     }
 
                     if(!verify){
+                        res.status(205);
                         res.type("application/json");
                         halt(205,"{\"error_code\":\"205\"," +
                                 "\"error_msg\":\"The server successfully processed the request but the Problem doesn't exists in the database.\"}");
                     }
                 }catch (SQLException e){
-                    e.getStackTrace();
+                    e.printStackTrace();
                 }
             });
 

@@ -7,11 +7,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.commons.io.FileUtils;
+
 public class ProblemService {
-    public static Integer beforeAddProblem(Problem problem) throws Exception {
+    public static Integer beforeAddProblem(Problem problem) {
 
         JsonObject jsonObject;
         try {
@@ -82,8 +86,7 @@ public class ProblemService {
             }
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            e.getMessage();
+            e.printStackTrace();
         }
         return  jsonObject ;
 
@@ -91,7 +94,7 @@ public class ProblemService {
 
     public static JsonObject searchProblemByID(String problemID) throws SQLException{
         String selectProblemById = "SELECT filename, problem, lps FROM problem WHERE problem = '" +problemID.trim().toUpperCase()+ "'" ;
-
+        System.out.println("select problem by id: " +selectProblemById);
         StatementSQLite select = new StatementSQLite();
 
         ResultSet resultSet = select.selectTable(selectProblemById);
@@ -126,7 +129,7 @@ public class ProblemService {
         return true;
     }
 
-    public static Boolean deleteProblemByID(String problemID) throws SQLException{
+    public static Boolean deleteProblemByID(String problemID) throws SQLException, IOException {
         String deleteProblemById = "DELETE FROM problem WHERE problem = ?;" ;
         Problem problemObj = new Problem();
         problemObj.problem = problemID.trim().toUpperCase();
@@ -135,11 +138,10 @@ public class ProblemService {
 
         StatementSQLite transaction = new StatementSQLite();
         Boolean verifyPersistence = transaction.prepareStatementTransactionProblem(problemObj, deleteProblemById);
+        //File dir = new File("Files\\ExpectedAnswer\\"+problemObj.problem);
 
-        File dir = new File("Files\\ExpectedAnswer\\"+problemObj.problem);
-        if (dir.exists()){
-            dir.delete();
-        }
+        FileUtils.deleteDirectory(new File("Files\\ExpectedAnswer\\"+problemObj.problem));
+
 
         return verifyPersistence;
 

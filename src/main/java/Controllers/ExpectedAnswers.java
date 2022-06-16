@@ -16,18 +16,6 @@ import static spark.Spark.*;
 public class ExpectedAnswers {
 
     public static void createExpectedAnswersRoutes() {
-        /*errors*/
-        notFound((req, res) -> {
-            res.type("application/json");
-            return "{\"error_code\":\"404\"," +
-                    "\"error_msg\":\"Sorry, URL Not Found\"}";
-        });
-
-        internalServerError((req, res) -> {
-            res.type("application/json");
-            return "{\"error_code\":\"500\"," +
-                    "\"error_msg\":\"Ops! Internal Server Error\"}";
-        });
         //expected Answer routes
         path("/expectedAnswer", () -> {
             before("/addExpectedAnswer", (req, res) -> {
@@ -38,10 +26,11 @@ public class ExpectedAnswers {
                     ExpectedAnswerService expectedAnswerService = new ExpectedAnswerService();
                     verify = expectedAnswerService.beforeAddExpectedAnswer(expectedAnswer);
                 } catch (Exception e) {
-                    e.getStackTrace();
+                    e.printStackTrace();
                 }
 
                 if (verify == null) {
+                    res.status(400);
                     res.type("application/json");
                     halt(400, "{\"error_code\":\"400\"," +
                             "\"error_msg\":\"What do you say to empty fields? Not today! All fields are required!!!\"}");
@@ -71,7 +60,7 @@ public class ExpectedAnswers {
                     res.type("application/json");
 
                 } catch (SQLException e){
-                    e.getStackTrace();
+                    e.printStackTrace();
 
                 }
                 return expectedAnswerToJson.expectedAnswerToString(expectedAnswerCreated);
@@ -86,6 +75,7 @@ public class ExpectedAnswers {
                     problem.problem = req.params(":problem");
                     jsonObject = searchProblemByID(problem.problem);
                     if(jsonObject==null){
+                        res.status(205);
                         res.type("application/json");
                         halt(205,"{\"error_code\":\"205\"," +
                                 "\"error_msg\":\"The server successfully processed the request but the Problem doesn't exists in the database.\"}");
@@ -96,13 +86,14 @@ public class ExpectedAnswers {
                     jsonObject = expectedAnswerService.searchAnswersByProblemID(req.params(":problem"));
 
                     if(jsonObject==null){
+                        res.status(205);
                         res.type("application/json");
                         halt(205,"{\"error_code\":\"205\"," +
                                 "\"error_msg\":\"The server has successfully processed the request but there are no Expected Answer registered for this Problem.\"}");
                     }
 
                 }catch(SQLException e){
-                    e.getStackTrace();
+                    e.printStackTrace();
                 }
 
                 res.type("application/json");

@@ -17,7 +17,6 @@ public class ExpectedAnswerService {
     public Integer beforeAddExpectedAnswer(ExpectedAnswer expectedAnswer) {
         JsonObject jsonObject;
         try {
-
             if  ( (expectedAnswer.inputFilename.trim().length() == 0) || (expectedAnswer.inputContent.trim().length() == 0) || (expectedAnswer.outputFilename.trim().length() == 0) || (expectedAnswer.outputContent.trim().length() == 0) || (expectedAnswer.problem.trim().length() == 0 ) ) {
                 System.out.println("Null field.");
                 return null;
@@ -54,13 +53,11 @@ public class ExpectedAnswerService {
                 dir.mkdirs();
             }
             byte[] decodedInputContent = Base64.getDecoder().decode(expectedAnswer.inputContent);
-            byte[] decodedOutputContent = Base64.getDecoder().decode(expectedAnswer.outputContent);
-
-
             FileWriter inputFile = new FileWriter(dir+"\\"+expectedAnswer.inputFilename, false);
             inputFile.write(new String(decodedInputContent));
             inputFile.close();
 
+            byte[] decodedOutputContent = Base64.getDecoder().decode(expectedAnswer.outputContent);
             FileWriter outputFile = new FileWriter(dir+"\\"+expectedAnswer.outputFilename, false);
             outputFile.write(new String(decodedOutputContent));
             outputFile.close();

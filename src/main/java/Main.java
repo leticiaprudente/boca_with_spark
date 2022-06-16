@@ -37,14 +37,14 @@ public class Main {
         executeCreateTable.createTable(dropTableExpectedAnswer);
         executeCreateTable.createTable(createTableExpectedAnswer);
 
-        String dropTableExecutionHistory="DROP TABLE IF EXISTS executionHistory ;";
-        String createTableExecutionHistory = "CREATE TABLE IF NOT EXISTS executionHistory ( " +
+        String dropTableExecutionHistory="DROP TABLE IF EXISTS sourceCodeExecutionHistory ;";
+        String createTableExecutionHistory = "CREATE TABLE IF NOT EXISTS sourceCodeExecutionHistory ( " +
                 "problem TEXT NOT NULL, " +
                 "filename TEXT NOT NULL, " +
                 "author TEXT NOT NULL, " +
-                "content TEXT NOT NULL, " +
+                "source_code TEXT NOT NULL, " +
                 "datetime TEXT NOT NULL, " +
-                "status TEXT NOT NULL CHECK (status IN ('SUCCESS', 'FAIL')), "+
+                "status TEXT NOT NULL CHECK (status IN ('SUCCESS', 'FAIL', 'Teste')), "+
                 "PRIMARY KEY(problem, datetime), " +
                 "FOREIGN KEY (problem) " +
                     "REFERENCES problem (problem) " +
