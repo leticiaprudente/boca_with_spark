@@ -74,7 +74,7 @@ public class ExpectedAnswerService {
 
     public static JsonObject searchAnswersByProblemID(String problemID) throws SQLException {
 
-        String selectAllAnswers = "SELECT rowid, inputFilename, inputContent, outputFilename, outputContent FROM expectedAnswer WHERE problem = '"+problemID.trim().toUpperCase()+"' ORDER BY rowid;"  ;
+        String selectAllAnswers = "SELECT rowid, inputFilename, inputContent, outputFilename, outputContent, problem FROM expectedAnswer WHERE problem = '"+problemID.trim().toUpperCase()+"' ORDER BY rowid;"  ;
         StatementSQLite statement = new StatementSQLite();
 
         JsonObject jsonObject = new JsonObject();
@@ -98,16 +98,27 @@ public class ExpectedAnswerService {
                 //row id increments for any new row
 
                 //Inserting key-value pairs into the json object
-                record.addProperty("Test Case", ord);
-                record.addProperty("Input", new String(decodedInputContent));
-                record.addProperty("Output", new String(decodedOutputContent));
+                record.addProperty("testCase", ord);
+                record.addProperty("inputFilename", resultSet.getString("inputFilename"));
+                record.addProperty("inputContent", new String(decodedInputContent));
+                record.addProperty("outputFilename", resultSet.getString("outputFilename"));
+                record.addProperty("outputContent", new String(decodedOutputContent));
+                record.addProperty("problem", resultSet.getString("problem"));
+
                 jsonArray.add(record);
 
                 ord += 1;
 
                 validation = true;
             }
-            jsonObject.add("Expected Answers for Problem " +problemID, jsonArray);
+            /*
+
+            inputFilename, inputContent, outputFilename, outputContent, problem
+
+            */
+
+
+            jsonObject.add("expectedAnswers" +problemID, jsonArray);
 
             if (!validation){
                 jsonObject = null;

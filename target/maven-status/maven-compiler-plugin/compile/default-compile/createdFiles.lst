@@ -1,6 +1,7 @@
 Controllers\SourceCodes.class
 Services\ExpectedAnswerService.class
 Services\SourceCodeService.class
+Classes\ExecutePython.class
 Classes\Problem.class
 Services\ProblemService.class
 Classes\StatementSQLite.class

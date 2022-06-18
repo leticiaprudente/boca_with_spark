@@ -1,10 +1,16 @@
 package Controllers;
 
 import Classes.*;
+import Services.ExpectedAnswerService;
 import Services.ProblemService;
 import Services.SourceCodeService;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.sql.SQLException;
+import java.util.Base64;
 
 import static spark.Spark.*;
 
@@ -46,6 +52,7 @@ public class SourceCodes {
 
                 SourceCodeService sourceCodeService = new SourceCodeService();
                 ObjectToJsonTransformer sourceCodeToJsonTransformer = new ObjectToJsonTransformer();
+
                 SourceCode sourceCodeCreated = new SourceCode();
 
                 try {
@@ -68,8 +75,7 @@ public class SourceCodes {
                 return sourceCodeToJsonTransformer.sourceCodeToString(sourceCodeCreated);
 
             });
-
-
         });
+
     }
 }

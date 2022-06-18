@@ -3,13 +3,15 @@ package Classes;
 public class ExpectedAnswer {
 
     public String inputFilename, inputContent, outputFilename, outputContent, problem ;
+    public int testCase ;
 
-    public ExpectedAnswer(String inputFilename, String inputContent, String outputFilename, String outputContent, String problem) {
+    public ExpectedAnswer(String inputFilename, String inputContent, String outputFilename, String outputContent, String problem, int testCase) {
         this.inputFilename = inputFilename;
         this.inputContent = inputContent ;
         this.outputFilename = outputFilename;
         this.outputContent = outputContent ;
         this.problem = problem;
+        this.testCase = testCase ;
     }
 
     public ExpectedAnswer() {
@@ -53,5 +55,13 @@ public class ExpectedAnswer {
 
     public void setProblem(String problem) {
         this.problem = problem;
+    }
+
+    public int getTestCase() {
+        return testCase;
+    }
+
+    public void setTestCase(int testCase) {
+        this.testCase = testCase;
     }
 }
