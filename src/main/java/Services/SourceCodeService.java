@@ -52,6 +52,7 @@ public class SourceCodeService {
                 dir.mkdirs();
             }
 
+
             ExpectedAnswerService expectedAnswerService = new ExpectedAnswerService();
             JsonObject jsonObject = expectedAnswerService.searchAnswersByProblemID(sourceCode.problem) ;
 
@@ -106,15 +107,104 @@ public class SourceCodeService {
                 return null;
             }
 
-
         } catch (Exception e) {
             e.getStackTrace();
         }
-        //deletar arquivo do codigo do aluno + resposta do aluno
-        //dar close no arquivo!!!!!!!
-        FileUtils.deleteDirectory(new File("Files\\SourceCode\\"+sourceCode.problem+"\\"));
 
         return sourceCode;
     }
+
+
+    public static JsonObject searchSourceCodeByID(String problemID) throws SQLException{
+        String selectSourceCodeById = "SELECT problem, filename, author, source_code, datetime, status FROM sourceCodeExecutionHistory WHERE problem = '" +problemID.trim().toUpperCase()+ "'" ;
+        System.out.println("select problem by id: " +selectSourceCodeById);
+        StatementSQLite select = new StatementSQLite();
+
+        ResultSet resultSet = select.selectTable(selectSourceCodeById);
+
+        JsonObject jsonObject = new JsonObject(); //it can't be null because of the add property! it must be instantiated
+
+        if(!resultSet.next()){
+            jsonObject = null;
+
+        } else {
+            jsonObject.addProperty("filename", resultSet.getString("filename"));
+            jsonObject.addProperty("author", resultSet.getString("author"));
+            jsonObject.addProperty("filename", resultSet.getString("filename"));
+            jsonObject.addProperty("source_code", resultSet.getString("source_code"));
+            jsonObject.addProperty("datetime", resultSet.getString("datetime"));
+            jsonObject.addProperty("status", resultSet.getString("status"));
+        }
+        resultSet.close();
+        return jsonObject;
+    }
+
+    public static JsonObject searchSourceCodeByFilter(Filter filter) throws SQLException{
+        String selectSourceCode = "SELECT problem, filename, author, source_code, datetime, status FROM sourceCodeExecutionHistory " ;
+        if( (filter.status != null) || (filter.startDateTime != null && filter.endDateTime != null) || (filter.problems != null)){
+            String add = "WHERE " ;
+            int cont = 0 ;
+            if(filter.status != null){
+                add += " status = '"+filter.status+"' " ;
+                cont+=1;
+            }
+            if(filter.startDateTime != null && filter.endDateTime != null){
+                if(cont>0){
+                    add += " AND " ;
+                }
+                add += " datetime BETWEEN ('"+filter.startDateTime+"' AND '"+filter.endDateTime+"' ) " ;
+                cont +=1 ;
+            }
+            if(filter.problems != null){
+                if(cont>0){
+                    add += " AND " ;
+                }
+                add += " problem IN (" +filter.problems+ ") ";
+
+            }
+            selectSourceCode += add ;
+        }
+
+        System.out.println("select problem by id: " +selectSourceCode);
+
+        JsonObject jsonObject = new JsonObject(); //it can't be null because of the add property! it must be instantiated
+
+        try{
+            StatementSQLite statement = new StatementSQLite();
+
+            ResultSet resultSet = statement.selectTable(selectSourceCode);
+
+            JsonArray jsonArray = new JsonArray();
+            Boolean validation = false;
+
+            //SQLException "A TYPE_FORWARD_ONLY": ResultSet only supports next() for navigation
+            //IF ACCESSING THE RESULT SET, EVEN IF IN SYSOUT, RETURN TO beforefirst()
+            while (resultSet.next()) {
+                JsonObject record = new JsonObject();
+
+                //Inserting key-value pairs into the json object
+                record.addProperty("filename", resultSet.getString("filename"));
+                record.addProperty("author", resultSet.getString("author"));
+                record.addProperty("filename", resultSet.getString("filename"));
+                record.addProperty("source_code", resultSet.getString("source_code"));
+                record.addProperty("datetime", resultSet.getString("datetime"));
+                record.addProperty("status", resultSet.getString("status"));
+                jsonArray.add(record);
+                validation = true;
+            }
+            jsonObject.add("SourceCodeHistory", jsonArray);
+
+            if (!validation){
+                System.out.println("Source Code History table is empty.");
+            }
+            resultSet.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return  jsonObject ;
+    }
+
+
 
 }

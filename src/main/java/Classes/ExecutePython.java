@@ -10,6 +10,14 @@ public class ExecutePython {
     public static String runScript(SourceCode sourceCode, ExpectedAnswer expectedAnswer){
         String s;
 
+        File dirSourceCode = new File("Files\\SourceCode\\"+sourceCode.problem+"\\");
+        if(dirSourceCode.exists()){
+            dirSourceCode.delete();
+            System.out.println("deletou");
+        }
+        dirSourceCode.mkdirs();
+
+
         try {
             String dir = "Files\\SourceCode\\"+sourceCode.problem+"\\"+sourceCode.author+"_"+sourceCode.filename;
 
@@ -38,6 +46,9 @@ public class ExecutePython {
             // read the output from the command
             //System.out.println("Here is the standard output of the command:\n");
             FileWriter outputFileSourceCode = null;
+
+            File deleteFile =  new File("Files\\SourceCode\\"+sourceCode.problem+"\\"+sourceCode.author+"_"+expectedAnswer.testCase+"_output.txt");
+            if (deleteFile.exists()) deleteFile.delete();
             while ((s = stdInput.readLine()) != null) {
                 System.out.println("ENTROU NO OUTPUT");
                 //colocar caminho onde o arquivo sera salvo temporariamente
@@ -74,12 +85,15 @@ public class ExecutePython {
                 System.out.println("É DIFERENTE");
                 return "FAIL";
             }
+            outputFileSourceCode.close();
         }
         catch (IOException e) {
             System.out.println("exception happened - here's what I know: ");
             e.printStackTrace();
             System.exit(-1);
         }
+
+
 
         return "SUCCESS";
 

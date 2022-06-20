@@ -75,6 +75,57 @@ public class SourceCodes {
                 return sourceCodeToJsonTransformer.sourceCodeToString(sourceCodeCreated);
 
             });
+
+            get("/searchSourceCodeByID/:problem", (req, res) -> {
+                JsonObject jsonObject = null;
+
+                try{
+                    SourceCodeService sourceCodeService = new SourceCodeService();
+                    jsonObject = sourceCodeService.searchSourceCodeByID(req.params(":problem"));
+
+                    if(jsonObject==null){
+                        res.status(205);
+                        res.type("application/json");
+                        halt(205,"{\"error_code\":\"205\"," +
+                                "\"error_msg\":\"The server successfully processed the request but the Problem doesn't exists in the database.\"}");
+                    }
+
+                }catch(SQLException e){
+                    e.printStackTrace();
+                }
+
+                res.type("application/json");
+                return jsonObject;
+            });
+
+            get("/searchSourceCodeByFilter", (req, res) -> {
+                JsonObject jsonObject = null;
+
+                try{
+                    SourceCodeService sourceCodeService = new SourceCodeService();
+
+                    Filter filter = new Filter();
+                    filter.status = req.queryParams("status");
+                    filter.startDateTime = req.queryParams("startDateTime");
+                    filter.endDateTime = req.queryParams("endDateTime");
+                    filter.problems = req.queryParams("problems");
+
+                    jsonObject = sourceCodeService.searchSourceCodeByFilter(filter);
+
+                    if(jsonObject==null){
+                        res.status(205);
+                        res.type("application/json");
+                        halt(205,"{\"error_code\":\"205\"," +
+                                "\"error_msg\":\"The server successfully processed the request but the Source doesn't exists in the database.\"}");
+                    }
+
+                }catch(SQLException e){
+                    e.printStackTrace();
+                }
+
+                res.type("application/json");
+                return jsonObject;
+            });
         });
 
     }
