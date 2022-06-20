@@ -1,12 +1,14 @@
 Controllers\SourceCodes.class
 Services\ExpectedAnswerService.class
 Services\SourceCodeService.class
+Classes\ExecutePython.class
 Classes\Problem.class
 Services\ProblemService.class
 Classes\StatementSQLite.class
 Main.class
 Controllers\ExpectedAnswers.class
 Classes\SourceCode.class
+Classes\Filter.class
 Classes\JsonToObjectTransformer.class
 Classes\ObjectToJsonTransformer.class
 Controllers\Problems.class

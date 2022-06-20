@@ -40,6 +40,7 @@
 
 #### - Source Code
 - **Post**: `http://localhost:4567/sourceCode/addSourceCode`
+- **Get By Filter**: `http://localhost:4567/sourceCode/searchSourceCodeByFilter`
 
 ## Postman File
 - 📄 [**Sparkjava-Boca-Postman**](/Postman/SparkjavaBOCA.postman_collection.json)
